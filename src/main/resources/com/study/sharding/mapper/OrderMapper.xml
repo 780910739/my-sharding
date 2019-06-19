@@ -26,4 +26,8 @@
         </if>
     </select>
 
+    <select id="selectDetailById" parameterType="java.lang.Long" resultType="java.util.Map">
+        SELECT * FROM t_order t LEFT JOIN t_order_detail d ON t.order_id=d.order_id WHERE t.order_id=#{id}
+    </select>
+
 </mapper>

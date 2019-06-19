@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author pukaiquan
@@ -40,6 +41,12 @@ public class OrderController {
     @RequestMapping("get")
     public String getOrder(@RequestBody TOrder order) {
         List<TOrder> list = orderMapper.selectById(order);
+        return list.toString();
+    }
+
+    @RequestMapping("getDetail")
+    public String getOrderDetail(@RequestBody TOrder order) {
+        List<Map> list = orderMapper.selectDetailById(order.getOrderId());
         return list.toString();
     }
 

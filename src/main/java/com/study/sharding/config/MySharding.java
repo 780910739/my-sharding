@@ -1,6 +1,7 @@
 package com.study.sharding.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import com.study.sharding.util.DataSourceUtil;
 import org.apache.shardingsphere.api.config.sharding.ShardingRuleConfiguration;
 import org.apache.shardingsphere.api.config.sharding.TableRuleConfiguration;
 import org.apache.shardingsphere.api.config.sharding.strategy.ComplexShardingStrategyConfiguration;
@@ -28,12 +29,12 @@ public class MySharding {
     @Primary
     public DataSource getShardingDataSource() {
         Map<String, DataSource> dataSourceMap = new HashMap<>(1);
-        DruidDataSource dataSource1 = new DruidDataSource();
-        dataSource1.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource1.setUrl("jdbc:mysql://localhost:3306/ds0?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8");
-        dataSource1.setUsername("root");
-        dataSource1.setPassword("123456");
-        dataSourceMap.put("ds0", dataSource1);
+//        DruidDataSource dataSource1 = new DruidDataSource();
+//        dataSource1.setDriverClassName("com.mysql.jdbc.Driver");
+//        dataSource1.setUrl("jdbc:mysql://localhost:3306/ds0?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8");
+//        dataSource1.setUsername("root");
+//        dataSource1.setPassword("123456");
+        dataSourceMap.put("ds0", DataSourceUtil.createDataSource("ds0"));
 
         // 配置Order表规则
         TableRuleConfiguration orderTableRuleConfig = new TableRuleConfiguration("t_order", "ds0.t_order_${0..1}");
@@ -50,7 +51,7 @@ public class MySharding {
 
         //复合分片配置
         orderTableRuleConfig.setTableShardingStrategyConfig(new ComplexShardingStrategyConfiguration
-                ("user_id,status,create_time", new MyComplexKeysShardingAlgorithm()));
+                ("order_id,user_id,status,create_time", new MyComplexKeysShardingAlgorithm()));
 
         // 配置分片规则
         ShardingRuleConfiguration shardingRuleConfig = new ShardingRuleConfiguration();
