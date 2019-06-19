@@ -23,7 +23,7 @@ public class TOrder implements Serializable {
 
     private Long userId;
 
-    private int status;
+    private Integer status;
 
     @JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
