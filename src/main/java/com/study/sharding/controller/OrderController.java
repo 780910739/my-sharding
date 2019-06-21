@@ -29,12 +29,16 @@ public class OrderController {
 
     @RequestMapping("/add")
     public String addOrder() {
-        TOrder order = new TOrder();
-        order.setOrderId(Sequence.getSequenceId());
-        order.setUserId(Sequence.getSequenceId());
-        order.setStatus(1);
-        order.setCreateTime(LocalDateTime.now());
-        orderMapper.insert(order);
+        for (int i=0;i<20;i++) {
+            TOrder order = new TOrder();
+            order.setOrderId(Sequence.getSequenceId());
+            order.setUserId(Sequence.getSequenceId());
+//            order.setUserId(8918797918449667l);
+//            order.setUserId(8918801079967746l);
+            order.setStatus(1);
+            order.setCreateTime(LocalDateTime.now());
+            orderMapper.insert(order);
+        }
         return "SUCCESS";
     }
 

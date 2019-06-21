@@ -5,8 +5,11 @@ import com.study.sharding.util.DataSourceUtil;
 import org.apache.shardingsphere.api.config.sharding.ShardingRuleConfiguration;
 import org.apache.shardingsphere.api.config.sharding.TableRuleConfiguration;
 import org.apache.shardingsphere.api.config.sharding.strategy.ComplexShardingStrategyConfiguration;
+import org.apache.shardingsphere.api.config.sharding.strategy.HintShardingStrategyConfiguration;
 import org.apache.shardingsphere.api.config.sharding.strategy.InlineShardingStrategyConfiguration;
 import org.apache.shardingsphere.api.config.sharding.strategy.StandardShardingStrategyConfiguration;
+import org.apache.shardingsphere.api.sharding.hint.HintShardingAlgorithm;
+import org.apache.shardingsphere.core.strategy.route.hint.HintShardingStrategy;
 import org.apache.shardingsphere.shardingjdbc.api.ShardingDataSourceFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,17 +40,11 @@ public class MySharding {
         dataSourceMap.put("ds0", DataSourceUtil.createDataSource("ds0"));
 
         // 配置Order表规则
-        TableRuleConfiguration orderTableRuleConfig = new TableRuleConfiguration("t_order", "ds0.t_order_${0..1}");
+        TableRuleConfiguration orderTableRuleConfig = new TableRuleConfiguration("t_order", "ds0.t_order_${0..1}_${0..1}");
 
         //行表达式分片配置（Groovy表达式配置表路由规则）
-        orderTableRuleConfig.setTableShardingStrategyConfig(new InlineShardingStrategyConfiguration
-                ("order_id", "t_order_${order_id % 2}"));
-
-        //标准分片配置(对SQL语句中的=, IN和BETWEEN AND的分片)
-        //PreciseShardingAlgorithm (=, IN)
-        //RangeShardingAlgorithm (BETWEEN AND)
-//        orderTableRuleConfig.setTableShardingStrategyConfig(new StandardShardingStrategyConfiguration
-//                ("order_id", new MyPreciseShardingAlgorithm()));
+//        orderTableRuleConfig.setTableShardingStrategyConfig(new InlineShardingStrategyConfiguration
+//                ("order_id", "t_order_${order_id % 2}"));
 
         //复合分片配置
         orderTableRuleConfig.setTableShardingStrategyConfig(new ComplexShardingStrategyConfiguration

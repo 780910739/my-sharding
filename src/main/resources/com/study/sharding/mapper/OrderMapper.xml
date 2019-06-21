@@ -10,7 +10,7 @@
     <select id="selectById" parameterType="java.lang.Long" resultType="com.study.sharding.entity.TOrder">
         SELECT * FROM t_order WHERE 1=1
         <if test="order.orderId!=null and order.orderId!=''">
-            AND order_id=#{order.orderId}
+            AND order_id in(#{order.orderId})
         </if>
         <if test="order.userId!=null">
             and user_id=#{order.userId}
