@@ -4,13 +4,13 @@ import com.study.sharding.entity.TOrder;
 import com.study.sharding.mapper.OrderMapper;
 import com.study.sharding.util.Sequence;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shardingsphere.api.hint.HintManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +29,7 @@ public class OrderController {
 
     @RequestMapping("/add")
     public String addOrder() {
-        for (int i=0;i<20;i++) {
+        for (int i = 0; i < 20; i++) {
             TOrder order = new TOrder();
             order.setOrderId(Sequence.getSequenceId());
             order.setUserId(Sequence.getSequenceId());
@@ -42,9 +42,26 @@ public class OrderController {
         return "SUCCESS";
     }
 
+    //复合分片
     @RequestMapping("get")
     public String getOrder(@RequestBody TOrder order) {
         List<TOrder> list = orderMapper.selectById(order);
+        return list.toString();
+    }
+
+    //强制路由
+    @RequestMapping("getHint")
+    public String getOrderHint(@RequestBody TOrder order) {
+        List<TOrder> list = null;
+        if (order.getCreateTime() != null) {
+            try (HintManager hintManager = HintManager.getInstance()) {
+                hintManager.addTableShardingValue("t_order","_0_1");
+                list = orderMapper.selectById(order);
+                hintManager.close();
+            }
+        }else {
+            list = orderMapper.selectById(order);
+        }
         return list.toString();
     }
 

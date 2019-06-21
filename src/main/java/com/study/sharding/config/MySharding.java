@@ -4,11 +4,9 @@ import com.alibaba.druid.pool.DruidDataSource;
 import com.study.sharding.util.DataSourceUtil;
 import org.apache.shardingsphere.api.config.sharding.ShardingRuleConfiguration;
 import org.apache.shardingsphere.api.config.sharding.TableRuleConfiguration;
-import org.apache.shardingsphere.api.config.sharding.strategy.ComplexShardingStrategyConfiguration;
-import org.apache.shardingsphere.api.config.sharding.strategy.HintShardingStrategyConfiguration;
-import org.apache.shardingsphere.api.config.sharding.strategy.InlineShardingStrategyConfiguration;
-import org.apache.shardingsphere.api.config.sharding.strategy.StandardShardingStrategyConfiguration;
+import org.apache.shardingsphere.api.config.sharding.strategy.*;
 import org.apache.shardingsphere.api.sharding.hint.HintShardingAlgorithm;
+import org.apache.shardingsphere.core.rule.ShardingRule;
 import org.apache.shardingsphere.core.strategy.route.hint.HintShardingStrategy;
 import org.apache.shardingsphere.shardingjdbc.api.ShardingDataSourceFactory;
 import org.springframework.context.annotation.Bean;
@@ -32,11 +30,6 @@ public class MySharding {
     @Primary
     public DataSource getShardingDataSource() {
         Map<String, DataSource> dataSourceMap = new HashMap<>(1);
-//        DruidDataSource dataSource1 = new DruidDataSource();
-//        dataSource1.setDriverClassName("com.mysql.jdbc.Driver");
-//        dataSource1.setUrl("jdbc:mysql://localhost:3306/ds0?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8");
-//        dataSource1.setUsername("root");
-//        dataSource1.setPassword("123456");
         dataSourceMap.put("ds0", DataSourceUtil.createDataSource("ds0"));
 
         // 配置Order表规则
@@ -46,10 +39,14 @@ public class MySharding {
 //        orderTableRuleConfig.setTableShardingStrategyConfig(new InlineShardingStrategyConfiguration
 //                ("order_id", "t_order_${order_id % 2}"));
 
-        //复合分片配置
-        orderTableRuleConfig.setTableShardingStrategyConfig(new ComplexShardingStrategyConfiguration
-                ("order_id,user_id,status,create_time", new MyComplexKeysShardingAlgorithm()));
 
+
+        //复合分片
+        orderTableRuleConfig.setTableShardingStrategyConfig(new ComplexShardingStrategyConfiguration
+                ("order_id,user_id,status", new MyComplexKeysShardingAlgorithm()));
+        //强制路由
+        orderTableRuleConfig.setTableShardingStrategyConfig(new HintShardingStrategyConfiguration(
+                new MyHintShardingAlgorithm()));
         // 配置分片规则
         ShardingRuleConfiguration shardingRuleConfig = new ShardingRuleConfiguration();
         shardingRuleConfig.getTableRuleConfigs().add(orderTableRuleConfig);
