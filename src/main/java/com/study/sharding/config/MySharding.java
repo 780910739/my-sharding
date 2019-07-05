@@ -45,8 +45,8 @@ public class MySharding {
         orderTableRuleConfig.setTableShardingStrategyConfig(new ComplexShardingStrategyConfiguration
                 ("order_id,user_id,status", new MyComplexKeysShardingAlgorithm()));
         //强制路由
-        orderTableRuleConfig.setTableShardingStrategyConfig(new HintShardingStrategyConfiguration(
-                new MyHintShardingAlgorithm()));
+//        orderTableRuleConfig.setTableShardingStrategyConfig(new HintShardingStrategyConfiguration(
+//                new MyHintShardingAlgorithm()));
         // 配置分片规则
         ShardingRuleConfiguration shardingRuleConfig = new ShardingRuleConfiguration();
         shardingRuleConfig.getTableRuleConfigs().add(orderTableRuleConfig);
