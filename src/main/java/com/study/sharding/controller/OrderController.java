@@ -45,6 +45,9 @@ public class OrderController {
     //复合分片
     @RequestMapping("get")
     public String getOrder(@RequestBody TOrder order) {
+        if(order.getPageNum()!=null){
+            order.setPageNum((order.getPageNum()-1)*order.getPageSize());
+        }
         List<TOrder> list = orderMapper.selectById(order);
         return list.toString();
     }
@@ -71,8 +74,7 @@ public class OrderController {
         return list.toString();
     }
 
-    public static void main(String[] args) {
-        System.out.println(Sequence.getSequenceId() % 2);
-        System.out.println(Sequence.getSequenceId() % 2);
+    public static void main( String args[] ){
+
     }
 }

@@ -24,6 +24,10 @@
         <if test="order.createTime!=null">
             and create_time=#{order.createTime}
         </if>
+        <if test="order.pageNum!=null and order.pageSize!=null">
+            limit #{order.pageNum},#{order.pageSize}
+        </if>
+
     </select>
 
     <select id="selectDetailById" parameterType="java.lang.Long" resultType="java.util.Map">

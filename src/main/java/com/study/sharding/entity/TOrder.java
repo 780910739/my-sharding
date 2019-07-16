@@ -23,6 +23,10 @@ public class TOrder implements Serializable {
 
     private Integer status;
 
+    private Integer pageNum;
+
+    private Integer pageSize;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 }
