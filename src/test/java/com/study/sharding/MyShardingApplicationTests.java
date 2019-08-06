@@ -5,13 +5,17 @@ import com.study.sharding.mapper.OrderMapper;
 import com.study.sharding.service.OrderService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -26,9 +30,29 @@ public class MyShardingApplicationTests {
     @Autowired
     OrderMapper orderMapper;
 
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    RedisTemplate redisTemplate;
+
+    @Autowired
+    RabbitTemplate rabbitTemplate;
+
     @Test
     public void contextLoads() {
-        TOrder order = new TOrder();
+        for (int i=0;i<100000;i++) {
+            rabbitTemplate.convertAndSend("GPS_QUERY", "test "+i);
+        }
+
+        //往tenmao.blog.channel发送消息"hello world"
+//        for (int i=0;i<100;i++) {
+//            redisTemplate.opsForList().leftPush("query","test "+i);
+//            //stringRedisTemplate.convertAndSend("tenmao.blog.channel", "hello world "+i);
+//        }
+
+        //System.out.println(redisTemplate.opsForList().rightPop("query"));
+//        TOrder order = new TOrder();
 //		List<TOrder> list = orderMapper.selectById(order);
 //		order.setOrderId(Sequence.getSequenceId());
 //		order.setUserId(Sequence.getSequenceId());
@@ -60,14 +84,14 @@ public class MyShardingApplicationTests {
         //ExampleMatcher matcher = ExampleMatcher.matching().withIgnorePaths("age","createTime");
         //Example<User> example = Example.of(user, matcher);
 
-        order.setOrderId(8992584491376641l);
-        Example<TOrder> example = Example.of(order);
+//        order.setOrderId(8992584491376641l);
+//        Example<TOrder> example = Example.of(order);
+//
+//        //排序
+//        Sort sort = new Sort(Sort.Direction.DESC, "createTime");
+//        List<TOrder> all = orderService.findAll(sort);
 
-        //排序
-        Sort sort = new Sort(Sort.Direction.DESC, "createTime");
-        List<TOrder> all = orderService.findAll(sort);
-
-        System.out.println("result=== " + all);
+//        System.out.println("result=== " + all);
 
     }
 
