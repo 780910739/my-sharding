@@ -19,7 +19,7 @@
 
         <sharding.version>4.0.0-RC1</sharding.version>
         <mybatis.plus.version>3.0.7.1</mybatis.plus.version>
-        <fastjson.version>1.2.41</fastjson.version>
+        <fastjson.version>1.2.83</fastjson.version>
         <jackson.datatype.version>2.9.9</jackson.datatype.version>
     </properties>
 
